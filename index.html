@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="theme-color" content="#1d4ed8">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Escala de riesgo de organicidad en dolor abdominal funcional</title>
+  <style>
+    :root {
+      --primary: #1d4ed8;
+      --primary-light: #e0e7ff;
+      --accent: #0ea5e9;
+      --bg: #f5f5f9;
+      --text-main: #111827;
+      --text-muted: #6b7280;
+      --border: #d1d5db;
+      --risk-low: #15803d;
+      --risk-mid: #b45309;
+      --risk-high: #b91c1c;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 2rem 1rem;
+      background: radial-gradient(circle at top left, #e0f2fe 0, #f5f5f9 55%, #e5e7eb 100%);
+      color: var(--text-main);
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 1.8rem 2.2rem;
+      border-radius: 12px;
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.18);
+      border: 1px solid #e5e7eb;
+    }
+    header {
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    h1 {
+      font-size: 1.7rem;
+      margin: 0;
+      color: var(--primary);
+    }
+    h2 {
+      font-size: 1.1rem;
+      margin: 0.2rem 0 0.4rem 0;
+      color: #111827;
+      font-weight: 600;
+    }
+    .filiacion {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .intro {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 1.1rem;
+    }
+    .tag-aviso {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      background: #fef3c7;
+      color: #92400e;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      margin-left: 0.4rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+    thead th {
+      text-align: left;
+      padding: 0.4rem 0.6rem;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      color: white;
+      font-weight: 600;
+      font-size: 0.85rem;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+    tbody tr.group-row th {
+      padding: 0.35rem 0.6rem;
+      background: var(--primary-light);
+      color: #1f2937;
+      font-weight: 600;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
+    tbody tr.item-row:nth-child(even) {
+      background: #f9fafb;
+    }
+    tbody tr.item-row:nth-child(odd) {
+      background: #ffffff;
+    }
+    tbody td {
+      padding: 0.25rem 0.6rem;
+      vertical-align: middle;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    tbody td.label-cell {
+      width: 32%;
+      font-weight: 500;
+      color: #111827;
+    }
+    tbody td.help-cell {
+      width: 30%;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    select {
+      width: 100%;
+      max-width: 100%;
+      padding: 0.25rem 0.35rem;
+      font-size: 0.85rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+    }
+    select:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 1px;
+      border-color: var(--accent);
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+    }
+    .btn {
+      display: inline-block;
+      padding: 0.55rem 1.3rem;
+      font-size: 0.9rem;
+      border-radius: 999px;
+      border: none;
+      background: var(--primary);
+      color: #fff;
+      cursor: pointer;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+    .btn:hover {
+      background: #1e40af;
+    }
+    .btn-sec {
+      background: #e5e7eb;
+      color: #374151;
+    }
+    .btn-sec:hover {
+      background: #d1d5db;
+    }
+
+    .resultado {
+      margin-top: 1rem;
+      padding: 0.9rem 1rem;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+    }
+    .resultado p {
+      margin: 0.15rem 0;
+    }
+    .resultado strong {
+      font-size: 0.95rem;
+    }
+    .riesgo-bajo {
+      color: var(--risk-low);
+      font-weight: 700;
+    }
+    .riesgo-intermedio {
+      color: var(--risk-mid);
+      font-weight: 700;
+    }
+    .riesgo-alto {
+      color: var(--risk-high);
+      font-weight: 700;
+    }
+    .disclaimer {
+      margin-top: 1rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      border-top: 1px dashed #e5e7eb;
+      padding-top: 0.7rem;
+    }
+    .firma {
+      margin-top: 0.4rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-align: right;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem 0.4rem;
+      }
+      .container {
+        padding: 1.2rem 1.1rem;
+      }
+      tbody td.help-cell {
+        display: none;
+      }
+    }
+  
+    .header-wrapper {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .header-content {
+      flex: 1;
+    }
+    .logo-corner {
+      flex-shrink: 0;
+      height: 60px;
+      width: auto;
+      object-fit: contain;
+    }
+
+  
+    #login-screen {
+      position: fixed; inset: 0;
+      background: radial-gradient(circle at top left, #e0f2fe 0, #f5f5f9 55%, #e5e7eb 100%);
+      display: flex; align-items: center; justify-content: center; z-index: 9999;
+    }
+    .login-card {
+      background: #fff; border-radius: 14px;
+      box-shadow: 0 20px 50px rgba(15,23,42,0.18);
+      padding: 2.5rem 2.8rem; width: 100%; max-width: 420px;
+      border: 1px solid #e5e7eb; text-align: center;
+    }
+    .login-card h2 { font-size: 1.3rem; color: #1d4ed8; margin-bottom: 0.3rem; }
+    .login-card p  { font-size: 0.85rem; color: #6b7280; margin-bottom: 1.5rem; }
+    .login-card input[type=email] {
+      width: 100%; padding: 0.65rem 0.9rem;
+      border: 1px solid #d1d5db; border-radius: 8px;
+      font-size: 0.95rem; margin-bottom: 0.8rem; outline: none;
+    }
+    .login-card input[type=email]:focus { border-color: #1d4ed8; }
+    #login-btn {
+      width: 100%; padding: 0.7rem;
+      background: linear-gradient(90deg, #1d4ed8, #0ea5e9);
+      color: white; border: none; border-radius: 8px;
+      font-size: 1rem; font-weight: 600; cursor: pointer;
+    }
+    #login-btn:disabled { opacity: 0.6; cursor: default; }
+    #login-error { display:none; color:#b91c1c; font-size:0.82rem; margin-top:0.5rem; }
+    #user-badge {
+      position: fixed; top: 12px; right: 16px;
+      background: #fff; border: 1px solid #e5e7eb; border-radius: 999px;
+      padding: 0.3rem 0.8rem; font-size: 0.78rem; color: #374151;
+      display: none; align-items: center; gap: 0.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08); z-index: 100;
+    }
+    #user-badge button {
+      background: none; border: none; color: #b91c1c;
+      cursor: pointer; font-size: 0.78rem; font-weight: 600;
+    }
+
+  
+    /* ══════════════════════════════════
+       RESPONSIVE MÓVIL
+    ══════════════════════════════════ */
+
+    /* Tabla: scroll horizontal en móvil */
+    .table-wrapper {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 700px) {
+
+      body {
+        padding: 0.5rem 0.3rem;
+      }
+
+      .container {
+        padding: 1rem 0.8rem;
+        border-radius: 8px;
+      }
+
+      /* Header: logo debajo del título en móvil */
+      .header-wrapper {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.6rem;
+      }
+      .logo-corner {
+        height: 45px;
+        align-self: flex-end;
+        margin-top: -3rem;
+      }
+
+      h1 { font-size: 1.2rem; }
+      h2 { font-size: 0.95rem; }
+
+      /* Tabla adaptada a móvil */
+      table {
+        font-size: 0.78rem;
+        min-width: 520px; /* fuerza scroll horizontal */
+      }
+      thead th { font-size: 0.72rem; padding: 0.35rem 0.4rem; }
+      tbody td { padding: 0.2rem 0.4rem; }
+      tbody td.label-cell { width: auto; }
+      tbody td.help-cell  { display: none; } /* oculta columna ayuda en móvil */
+
+      /* Select más grande para dedo */
+      select {
+        font-size: 0.85rem;
+        padding: 0.4rem 0.3rem;
+        min-height: 36px;
+      }
+
+      /* Panel de resultado */
+      .result-panel {
+        padding: 0.8rem;
+        font-size: 0.85rem;
+      }
+
+      /* Botón reset */
+      button[onclick="resetForm()"],
+      button[onclick*="reset"] {
+        width: 100%;
+        padding: 0.8rem;
+        font-size: 1rem;
+      }
+
+      /* Login card en móvil */
+      .login-card {
+        padding: 1.8rem 1.2rem;
+        margin: 0 0.5rem;
+      }
+
+      /* User badge más pequeño */
+      #user-badge {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.6rem;
+        top: 8px;
+        right: 8px;
+        max-width: 60vw;
+        overflow: hidden;
+      }
+      #user-badge span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 120px;
+      }
+    }
+
+    /* Tablet */
+    @media (max-width: 900px) and (min-width: 701px) {
+      .container { padding: 1.2rem 1.4rem; }
+      table { font-size: 0.83rem; }
+      tbody td.help-cell { font-size: 0.75rem; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <div id="login-screen">
+    <div class="login-card">
+      <div id="login-form">
+        <img src="./logo.png" alt="Logo Dr. Morán" style="height:80px;object-fit:contain;margin-bottom:0.8rem;" />
+        <h2>Escala de organicidad</h2>
+        <p>Dr. Senador Morán · Aparato Digestivo<br>Introduce tu correo para acceder</p>
+        <input type="email" id="login-email" placeholder="tu@correo.es" />
+        <button id="login-btn" onclick="sendMagicLink()">Acceder</button>
+        <div id="login-error"></div>
+      </div>
+    </div>
+  </div>
+  <div id="user-badge">
+    👤 <span id="user-email"></span>
+    <button onclick="logout()">Salir</button>
+  </div>
+
+  <div id="app-content" style="display:none;">
+<div class="container">
+    <header>
+      <div class="header-wrapper">
+        <div class="header-content">
+          <h1>Escala de riesgo de organicidad</h1>
+          <h2>Pacientes con dolor abdominal funcional / trastornos de interacción intestino–cerebro
+            <span class="tag-aviso">Prototipo clínico · No validada</span>
+          </h2>
+          <div class="filiacion">
+            Dr Senador Morán · 30/6202 · Especialista en aparato digestivo
+          </div>
+        </div>
+        <img src="./logo.png" alt="Logo Dr. Morán" class="logo-corner" />
+      </div>
+    </header>
+
+    <p class="intro">
+      Herramienta de apoyo a la decisión clínica para estimar el riesgo de patología orgánica en pacientes con dolor abdominal
+      de perfil funcional. Suma factores clínicos de riesgo (“alarm features”) y resta puntos cuando el patrón es claramente
+      compatible con un trastorno de la interacción intestino–cerebro. 
+      Úsela siempre integrada en la valoración clínica global.
+    </p>
+
+    <div class="table-wrapper"><table>
+      <thead>
+        <tr>
+          <th>Dominio / Ítem</th>
+          <th>Selección</th>
+          <th>Comentario</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- 1. EDAD -->
+        <tr class="group-row">
+          <th colspan="3">1. Edad</th>
+        </tr>
+        <tr class="item-row">
+          <td class="label-cell">Edad / edad de inicio</td>
+          <td>
+            <select class="score-select" data-factor="Edad">
+              <option value="0">&lt; 40 años sin cambio reciente del patrón (0)</option>
+              <option value="1">40–49 años o inicio de síntomas entre 40–49 (1)</option>
+              <option value="2">≥ 50 años o inicio de síntomas ≥ 50 (2)</option>
+            </select>
+          </td>
+          <td class="help-cell">Edad de inicio tardía aumenta probabilidad de organicidad.</td>
+        </tr>
+
+        <!-- 2. PATRÓN DEL DOLOR -->
+        <tr class="group-row">
+          <th colspan="3">2. Patrón del dolor</th>
+        </tr>
+        <tr class="item-row">
+          <td class="label-cell">Patrón del dolor</td>
+          <td>
+            <select class="score-select" data-factor="Patrón del dolor">
+              <option value="0">Dolor episódico ≥6 meses, relacionado con defecación/cambios ritmo (0)</option>
+              <option value="1">Dolor intermitente no progresivo, sin clara relación comida/defecación (1)</option>
+              <option value="2">Dolor continuo o progresivo, de nueva aparición (&lt;6 meses) (2)</option>
+            </select>
+          </td>
+          <td class="help-cell">Dolor continuo y progresivo orienta más a enfermedad orgánica.</td>
+        </tr>
+        <tr class="item-row">
+          <td class="label-cell">Síntomas nocturnos</td>
+          <td>
+            <select class="score-select" data-factor="Síntomas nocturnos">
+              <option value="0">No despierta por la noche (0)</option>
+              <option value="1">Despertar ocasional con urgencia rectal clara (1)</option>
+              <option value="2">Despertares frecuentes sin relación clara con defecación (2)</option>
+            </select>
+          </td>
+          <td class="help-cell">Despertares nocturnos “no funcionales” son red flag relativa.</td>
+        </tr>
+
+        <!-- 3. SÍNTOMAS DIGESTIVOS DE ALARMA -->
+        <tr class="group-row">
+          <th colspan="3">3. Síntomas digestivos de alarma</th>
+        </tr>
+        <tr class="item-row">
+          <td class="label-cell">Sangre en heces</td>
+          <td>
+            <select class="score-select" data-factor="Sangre en heces">
+              <option value="0">Nunca (0)</option>
+              <option value="1">Sangre roja solo en papel, esporádica (1)</option>
+              <option value="2">Melenas o sangre mezclada/recurrente (2)</option>
+            </select>
+          </td>
+          <td class="help-cell">La hemorragia digestiva aumenta claramente la sospecha de organicidad.</td>
+        </tr>
+        <tr class="item-row">
+          <td class="label-cell">Alteración del hábito intestinal</td>
+          <td>
+            <select class="score-select" data-factor="Alteración hábito">
+              <option value="0">Patrón compatible con SII (sin diarrea nocturna) (0)</option>
+              <option value="1">Diarrea crónica con episodios nocturnos o esteatorrea (1)</option>
+              <option value="2">Diarrea acuosa profusa/nocturna con urgencia importante (2)</option>
+            </select>
+          </td>
+          <td class="help-cell">Diarrea nocturna/esteatorrea obliga a descartar patología orgánica.</td>
+        </tr>
+        <tr class="item-row">
+          <td class="label-cell">Vómitos / disfagia</td>
+          <td>
+            <select class="score-select" data-factor="Síntomas altos">
+              <option value="0">Ausentes (0)</option>
+              <option value="1">Ocasionales, ligados a comidas copiosas/ansiedad (1)</option>
+              <option value="2">Vómitos recurrentes, disfagia u odinofagia (2)</option>
+            </select>
+          </td>
+          <td class="help-cell">Disfagia y vómitos persistentes son red flags formales.</td>
+        </tr>
+
+        <!-- 4. SÍNTOMAS SISTÉMICOS -->
+        <tr class="group-row">
+          <th colspan="3">4. Síntomas sistémicos</th>
+        </tr>
+        <tr class="item-row">
+          <td class="label-cell">Cambio ponderal</td>
+          <td>
+            <select class="score-select" data-factor="Peso">
+              <option value="0">Peso estable / cambios &lt;3 kg explicables (0)</option>
+              <option value="1">Pérdida 3–5 kg en 6 meses parcialmente explicable (1)</option>
+              <option value="2">Pérdida &gt;5 kg en 6 meses o &gt;10% sin explicación (2)</option>
+            </select>
+          </td>
+          <td class="help-cell">Pérdida de peso involuntaria es un signo mayor de alarma.</td>
+        </tr>
+        <tr class="item-row">
+          <td class="label-cell">Fiebre / sudoraciones</td>
+          <td>
+            <select class="score-select" data-factor="Fiebre">
+              <option value="0">No (0)</option>
+              <option value="1">Febrícula referida sin documentación clara (1)</option>
+              <option value="2">Fiebre documentada, sudoración nocturna, astenia intensa (2)</option>
+            </select>
+          </td>
+          <td class="help-cell">Cuadro constitucional orienta a enfermedad inflamatoria/infecciosa.</td>
+        </tr>
+
+        <!-- 5. ANTECEDENTES -->
+        <tr class="group-row">
+          <th colspan="3">5. Antecedentes personales y familiares</th>
+        </tr>
+        <tr class="item-row">
+          <td class="label-cell">AP personales GI</td>
+          <td>
+            <select class="score-select" data-factor="AP personales GI">
+              <option value="0">Ninguno relevante (0)</option>
+              <option value="1">EII en remisión, pólipos, celiaquía controlada (1)</option>
+              <option value="2">EII activa/reciente, neoplasia digestiva previa, RT abdominal (2)</option>
+            </select>
+          </td>
+          <td class="help-cell">Antecedentes orgánicos recientes elevan umbral de sospecha.</td>
+        </tr>
+        <tr class="item-row">
+          <td class="label-cell">AP familiares</td>
+          <td>
+            <select class="score-select" data-factor="AP familiares">
+              <option value="0">Sin CCR/EII/celiaquía en 1.º grado (0)</option>
+              <option value="1">1.º grado con CCR &gt;60 años, EII o celiaquía (1)</option>
+              <option value="2">1.º grado con CCR &lt;50 años o síndrome hereditario (2)</option>
+            </select>
+          </td>
+          <td class="help-cell">Familiares de alto riesgo justifican estudio más agresivo.</td>
+        </tr>
+
+        <!-- 6. EXPLORACIÓN FÍSICA -->
+        <tr class="group-row">
+          <th colspan="3">6. Exploración física</th>
+        </tr>
+        <tr class="item-row">
+          <td class="label-cell">Abdomen</td>
+          <td>
+            <select class="score-select" data-factor="Exploración abdominal">
+              <option value="0">Normal, sin masas, sin defensa (0)</option>
+              <option value="1">Dolor a la palpación sin signos peritoneales (1)</option>
+              <option value="2">Masa, organomegalias, defensa, peritonismo (2)</option>
+            </select>
+          </td>
+          <td class="help-cell">Hallazgos objetivos en la exploración obligan a descartar orgánico.</td>
+        </tr>
+        <tr class="item-row">
+          <td class="label-cell">Otros hallazgos físicos</td>
+          <td>
+            <select class="score-select" data-factor="Exploración extraabdominal">
+              <option value="0">Sin hallazgos relevantes (0)</option>
+              <option value="1">Adenopatías pequeñas, hallazgos inespecíficos (1)</option>
+              <option value="2">Adenopatías significativas, ictericia, edemas, lesiones cutáneas (2)</option>
+            </select>
+          </td>
+          <td class="help-cell">Signos sistémicos refuerzan sospecha de enfermedad orgánica.</td>
+        </tr>
+
+        <!-- 7. ANALÍTICA Y HECES -->
+        <tr class="group-row">
+          <th colspan="3">7. Analítica básica y heces</th>
+        </tr>
+        <tr class="item-row">
+          <td class="label-cell">Hemograma / bioquímica</td>
+          <td>
+            <select class="score-select" data-factor="Laboratorio">
+              <option value="0">Hb, VCM, plaquetas y perfil hepático normales (0)</option>
+              <option value="1">Ferritina límite, VSG/CRP discretamente elevadas (1)</option>
+              <option value="2">Anemia sin causa clara, trombocitosis o alteraciones hepáticas significativas (2)</option>
+            </select>
+          </td>
+          <td class="help-cell">Anemia/marcadores inflamatorios elevados son signos de alerta.</td>
+        </tr>
+        <tr class="item-row">
+          <td class="label-cell">Calprotectina / heces</td>
+          <td>
+            <select class="score-select" data-factor="Heces">
+              <option value="0">Calprotectina normal, sangre oculta negativa (0)</option>
+              <option value="1">Calprotectina ligeramente elevada repetida, sin otros hallazgos (1)</option>
+              <option value="2">Calprotectina claramente elevada y/o sangre oculta positiva repetida (2)</option>
+            </select>
+          </td>
+          <td class="help-cell">Eleva la probabilidad de EII u otra patología orgánica.</td>
+        </tr>
+
+        <!-- 8. PERFIL FUNCIONAL / PSICOSOCIAL -->
+        <tr class="group-row">
+          <th colspan="3">8. Perfil funcional / psicosocial (resta puntos de organicidad)</th>
+        </tr>
+        <tr class="item-row">
+          <td class="label-cell">Cronicidad y patrón funcional</td>
+          <td>
+            <select class="score-select" data-factor="Cronicidad">
+              <option value="0">Dolor &lt;6 meses o patrón poco definido (0)</option>
+              <option value="-1">Dolor ≥6 meses, criterios Roma IV claros, sin red flags mayores (-1)</option>
+              <option value="-2">Dolor ≥12 meses, exploraciones previas negativas y estabilidad clínica (-2)</option>
+            </select>
+          </td>
+          <td class="help-cell">Cronicidad estable con estudios negativos favorece perfil funcional.</td>
+        </tr>
+        <tr class="item-row">
+          <td class="label-cell">Carga psicosocial / síndromes funcionales</td>
+          <td>
+            <select class="score-select" data-factor="Perfil psicosocial">
+              <option value="0">Sin datos relevantes (0)</option>
+              <option value="-1">Ansiedad/depresión/somatización documentadas (-1)</option>
+              <option value="-2">Varios síndromes funcionales (fibromialgia, cefalea crónica, SFC...) (-2)</option>
+            </select>
+          </td>
+          <td class="help-cell">Múltiples síndromes funcionales se asocian a dolor de origen central.</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <div class="controls">
+      <div>
+        <button type="button" class="btn" onclick="calcularScore()">Calcular riesgo</button>
+        <button type="button" class="btn btn-sec" onclick="resetForm()">Reiniciar</button>
+      </div>
+    </div>
+
+    <div id="resultado" class="resultado" style="display:none;">
+      <p><strong>Puntuación total:</strong> <span id="score-total"></span></p>
+      <p><strong>Nivel de riesgo estimado:</strong> <span id="score-riesgo"></span></p>
+      <p id="score-explicacion"></p>
+    </div>
+
+    <div class="disclaimer">
+      <strong>Advertencia:</strong> escala propuesta, derivada de factores de riesgo descritos en guías de SII/DGBI y 
+      estudios de “alarm features”. No ha sido validada formalmente. Debe utilizarse sólo como ayuda al razonamiento 
+      clínico, nunca como sustituto del juicio experto ni de las recomendaciones de guías.
+    </div>
+    <div class="firma">
+      Prototipo clínico · Dr Senador Morán · 30/6202 · Especialista en aparato digestivo
+    </div>
+  </div>
+
+  <script>
+    function calcularScore() {
+      const selects = document.querySelectorAll(".score-select");
+      let total = 0;
+
+      selects.forEach(sel => {
+        const val = parseInt(sel.value, 10);
+        total += val;
+      });
+
+      const resDiv = document.getElementById("resultado");
+      const scoreSpan = document.getElementById("score-total");
+      const riesgoSpan = document.getElementById("score-riesgo");
+      const explP = document.getElementById("score-explicacion");
+
+      scoreSpan.textContent = total + " puntos";
+
+      let riesgo = "";
+      let clase = "";
+      let explicacion = "";
+
+      if (total <= 3) {
+        riesgo = "RIESGO BAJO de organicidad";
+        clase = "riesgo-bajo";
+        explicacion =
+          "Perfil global compatible con trastorno de la interacción intestino–cerebro / dolor funcional, " +
+          "sin datos de alarma significativos. En ausencia de otros hallazgos, suele ser razonable un abordaje " +
+          "centrado en DGBI con estudio orgánico básico.";
+      } else if (total <= 7) {
+        riesgo = "RIESGO INTERMEDIO de organicidad";
+        clase = "riesgo-intermedio";
+        explicacion =
+          "Existen uno o varios factores de riesgo de organicidad, pero no un conglomerado claro de alto riesgo. " +
+          "Individualizar la necesidad y el tipo de estudio (endoscopia, imagen, serologías) según edad, contexto " +
+          "clínico, preferencias del paciente y evolución temporal.";
+      } else {
+        riesgo = "RIESGO ALTO de organicidad";
+        clase = "riesgo-alto";
+        explicacion =
+          "La acumulación de factores de alarma (edad, sangre, anemia, pérdida ponderal, calprotectina/heces alteradas, " +
+          "hallazgos en exploración) sugiere una probabilidad elevada de patología orgánica subyacente. " +
+          "Recomendable priorizar estudio orgánico completo (endoscopia, imagen y pruebas dirigidas según la sospecha).";
+      }
+
+      riesgoSpan.className = "";
+      riesgoSpan.classList.add(clase);
+      riesgoSpan.textContent = riesgo;
+      explP.textContent = explicacion;
+
+      resDiv.style.display = "block";
+    }
+
+    function resetForm() {
+      const selects = document.querySelectorAll(".score-select");
+      selects.forEach(sel => {
+        sel.selectedIndex = 0;
+      });
+      document.getElementById("resultado").style.display = "none";
+    }
+  </script>
+</div><!-- /app-content -->
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // ╔══════════════════════════════════════════════╗
+    // ║  PEGA AQUÍ TUS CREDENCIALES DE SUPABASE      ║
+    // ╚══════════════════════════════════════════════╝
+    const SUPABASE_URL  = 'https://pkwegqggjcbausmcdjnz.supabase.co';
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBrd2VncWdnamNiYXVzbWNkam56Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNzg1NTQsImV4cCI6MjA4ODc1NDU1NH0.a3mxgQh7Rv--xHF5T-w9yghz6DAAeg_lUubRUoBT4x8';
+
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+    async function checkSession() {
+      try {
+        const { data: { session } } = await sb.auth.getSession();
+        session ? showApp(session.user.email) : showLogin();
+        if (session) logAccess(session.user.email);
+      } catch(e) { showLogin(); }
+    }
+
+    async function logAccess(email) {
+      try {
+        await sb.from('accesos').insert({
+          email, pagina: 'escala-organicidad', user_agent: navigator.userAgent
+        });
+      } catch(e) {}
+    }
+
+    async function sendMagicLink() {
+      const email = document.getElementById('login-email').value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return showError('Introduce un correo válido.');
+      }
+      if (SUPABASE_URL.includes('XXXXXXXX')) {
+        return showError('⚠️ Configura primero tus credenciales de Supabase.');
+      }
+      const btn = document.getElementById('login-btn');
+      btn.disabled = true; btn.textContent = 'Enviando…';
+      try {
+        const { error } = await sb.auth.signInWithOtp({
+          email,
+          options: { emailRedirectTo: window.location.origin + window.location.pathname }
+        });
+        if (error) {
+          showError(error.message);
+          btn.disabled = false; btn.textContent = 'Acceder';
+        } else {
+          document.getElementById('login-form').innerHTML = `
+            <div style="padding:2rem 0">
+              <div style="font-size:2.5rem;margin-bottom:1rem">📧</div>
+              <p style="font-size:1.1rem;font-weight:600;color:#1d4ed8">Enlace enviado</p>
+              <p style="color:#6b7280;font-size:0.9rem">
+                Revisa <strong>${email}</strong><br>y haz clic en el enlace para acceder.
+              </p>
+            </div>`;
+        }
+      } catch(e) {
+        showError('Error de conexión. Verifica tus credenciales.');
+        btn.disabled = false; btn.textContent = 'Acceder';
+      }
+    }
+
+    async function logout() { await sb.auth.signOut(); location.reload(); }
+
+    function showLogin() {
+      document.getElementById('login-screen').style.display = 'flex';
+      document.getElementById('app-content').style.display  = 'none';
+      document.getElementById('user-badge').style.display   = 'none';
+    }
+    function showApp(email) {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('app-content').style.display  = 'block';
+      document.getElementById('user-badge').style.display   = 'flex';
+      document.getElementById('user-email').textContent = email;
+    }
+    function showError(msg) {
+      const el = document.getElementById('login-error');
+      el.textContent = msg; el.style.display = 'block';
+    }
+
+    sb.auth.onAuthStateChange((_e, session) => {
+      if (session) { showApp(session.user.email); logAccess(session.user.email); }
+      else showLogin();
+    });
+
+    window.addEventListener('DOMContentLoaded', checkSession);
+  </script>
+
+</body>
+</html>
